@@ -1,10 +1,14 @@
-import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
-import { useState } from 'react';
-import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {StatusBar} from 'expo-status-bar';
+import { Camera, CameraView, CameraType, useCameraPermissions } from 'expo-camera';
+import { useState, useRef } from 'react';
+import { Button, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function App() {
   const [facing, setFacing] = useState<CameraType>('back');
   const [permission, requestPermission] = useCameraPermissions();
+  const [startCamera, setStartCamera] = useState(false); //probably don't need this
+  const [image, setImage] = useState(null);
+  const camera = useRef(null);
 
   if (!permission) {
     // Camera permissions are still loading.
@@ -21,19 +25,40 @@ export default function App() {
     );
   }
 
-  function toggleCameraFacing() {
+  // This was setup as a way to grant permission, I'm not going to finish this part right now
+  const __startCamera = () => {
+    console.log('take picture pressed')
+  }
+
+  const takePicture = async () => {
+    if(camera) {
+      const photo = await camera.current.takePictureAsync();
+      console.log(photo.uri);
+      setImage(photo.uri);
+    }
+    
+  }
+
+  const toggleCameraFacing = () => {
     setFacing(current => (current === 'back' ? 'front' : 'back'));
   }
 
   return (
     <View style={styles.container}>
-      <CameraView style={styles.camera} facing={facing}>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
-            <Text style={styles.text}>Flip Camera</Text>
-          </TouchableOpacity>
-        </View>
-      </CameraView>
+      {!image ? (
+      <CameraView style={styles.camera} facing={facing} ref={camera}>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.button} onPress={takePicture}>
+          <Text style={styles.text}>Take Picture</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
+          <Text style={styles.text}>Flip Camera</Text>
+        </TouchableOpacity>
+      </View>
+    </CameraView>
+      )
+    : <Image source={{uri: image}} style={styles.camera}/>
+  }
     </View>
   );
 }
