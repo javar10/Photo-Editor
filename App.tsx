@@ -2,12 +2,15 @@ import {StatusBar} from 'expo-status-bar';
 import { Camera, CameraView, CameraType, useCameraPermissions } from 'expo-camera';
 import { useState, useRef } from 'react';
 import { Button, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import CameraPreview from './components/CameraPreview';
+import PhotoGallery from './components/PhotoGallery';
 
 export default function App() {
   const [facing, setFacing] = useState<CameraType>('back');
   const [permission, requestPermission] = useCameraPermissions();
   const [startCamera, setStartCamera] = useState(false); //probably don't need this
   const [image, setImage] = useState(null);
+  const [cameraRoll, setCameraRoll] = useState([]);
   const camera = useRef(null);
 
   if (!permission) {
@@ -33,18 +36,28 @@ export default function App() {
   const takePicture = async () => {
     if(camera) {
       const photo = await camera.current.takePictureAsync();
-      console.log(photo.uri);
+      console.log(photo);
       setImage(photo.uri);
     }
-    
   }
 
   const toggleCameraFacing = () => {
     setFacing(current => (current === 'back' ? 'front' : 'back'));
   }
 
+  const retakePicture = () => {
+    setImage(null)
+  }
+
+  const savePicture = () => {
+    setCameraRoll([...cameraRoll, image]);
+    console.log(cameraRoll);
+    setImage(null)
+  }
+
   return (
     <View style={styles.container}>
+      <PhotoGallery cameraRoll={cameraRoll} />
       {!image ? (
       <CameraView style={styles.camera} facing={facing} ref={camera}>
       <View style={styles.buttonContainer}>
@@ -57,7 +70,7 @@ export default function App() {
       </View>
     </CameraView>
       )
-    : <Image source={{uri: image}} style={styles.camera}/>
+    : <CameraPreview image={image} retakePicture={retakePicture} savePicture={savePicture}/>
   }
     </View>
   );
