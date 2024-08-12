@@ -6,7 +6,7 @@ import CameraPreview from './components/CameraPreview';
 import PhotoGallery from './components/PhotoGallery';
 
 export default function App() {
-  const [facing, setFacing] = useState<CameraType>('back');
+  const [facing, setFacing] = useState<CameraType>('front');
   const [permission, requestPermission] = useCameraPermissions();
   const [startCamera, setStartCamera] = useState(false); //probably don't need this
   const [image, setImage] = useState(null);
