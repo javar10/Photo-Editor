@@ -1,12 +1,13 @@
-import { FlatList, Image, Text, StyleSheet } from "react-native"
+import { FlatList, Image, Text, StyleSheet, Dimensions } from "react-native"
 
 const PhotoGallery = ({ cameraRoll, setViewGallery }) => {
     const renderImageItem = ({item}) => {
+        const imgSize = Dimensions.get('window').width / 4
         return (
             <Image 
                 source={{ uri: item}}
-                width={100}
-                height={100}
+                width={imgSize}
+                height={imgSize}
             />
         )
     }
@@ -15,7 +16,8 @@ const PhotoGallery = ({ cameraRoll, setViewGallery }) => {
         <FlatList
             data={cameraRoll}
             renderItem={renderImageItem}
-            keyExtractor={(item, index) => index.toString()}                
+            keyExtractor={(item, index) => index.toString()}
+            numColumns={4}               
             ListHeaderComponent={
                 <>
                     <Text 
