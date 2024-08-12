@@ -1,6 +1,6 @@
-import { FlatList, Image } from "react-native"
+import { FlatList, Image, Text, StyleSheet } from "react-native"
 
-const PhotoGallery = ({ cameraRoll }) => {
+const PhotoGallery = ({ cameraRoll, setViewGallery }) => {
     const renderImageItem = ({item}) => {
         return (
             <Image 
@@ -15,9 +15,25 @@ const PhotoGallery = ({ cameraRoll }) => {
         <FlatList
             data={cameraRoll}
             renderItem={renderImageItem}
-            keyExtractor={(item, index) => index.toString()}
+            keyExtractor={(item, index) => index.toString()}                
+            ListHeaderComponent={
+                <>
+                    <Text 
+                    style={styles.x}
+                    onPress={() => setViewGallery(false)}>X</Text>
+                </>
+            }
         />
     )
 }
+
+const styles = StyleSheet.create({
+    x: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        alignSelf: 'flex-end',
+        padding: 50
+    }
+})
 
 export default PhotoGallery;

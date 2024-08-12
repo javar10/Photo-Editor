@@ -59,7 +59,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       {viewGallery ? (
-        <PhotoGallery cameraRoll={cameraRoll} />
+        <PhotoGallery cameraRoll={cameraRoll} setViewGallery={setViewGallery}/>
       )
         : !image ? (
           <CameraView style={styles.camera} facing={facing} ref={camera}>
