@@ -1,4 +1,4 @@
-import {StatusBar} from 'expo-status-bar';
+import { StatusBar } from 'expo-status-bar';
 import { Camera, CameraView, CameraType, useCameraPermissions } from 'expo-camera';
 import { useState, useRef } from 'react';
 import { Button, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -11,6 +11,7 @@ export default function App() {
   const [startCamera, setStartCamera] = useState(false); //probably don't need this
   const [image, setImage] = useState(null);
   const [cameraRoll, setCameraRoll] = useState([]);
+  const [viewGallery, setViewGallery] = useState(false);
   const camera = useRef(null);
 
   if (!permission) {
@@ -34,7 +35,7 @@ export default function App() {
   }
 
   const takePicture = async () => {
-    if(camera) {
+    if (camera) {
       const photo = await camera.current.takePictureAsync();
       console.log(photo);
       setImage(photo.uri);
@@ -57,21 +58,28 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <PhotoGallery cameraRoll={cameraRoll} />
-      {!image ? (
-      <CameraView style={styles.camera} facing={facing} ref={camera}>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={takePicture}>
-          <Text style={styles.text}>Take Picture</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
-          <Text style={styles.text}>Flip Camera</Text>
-        </TouchableOpacity>
-      </View>
-    </CameraView>
+      {viewGallery ? (
+        <PhotoGallery cameraRoll={cameraRoll} />
       )
-    : <CameraPreview image={image} retakePicture={retakePicture} savePicture={savePicture}/>
-  }
+        : !image ? (
+          <CameraView style={styles.camera} facing={facing} ref={camera}>
+            <View style={styles.topButtonContainer}>
+              <TouchableOpacity style={styles.button} onPress={() => setViewGallery(true)}>
+                <Text style={styles.text}>View Gallery</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity style={styles.button} onPress={takePicture}>
+                <Text style={styles.text}>Take Picture</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
+                <Text style={styles.text}>Flip Camera</Text>
+              </TouchableOpacity>
+            </View>
+          </CameraView>
+        )
+          : <CameraPreview image={image} retakePicture={retakePicture} savePicture={savePicture} />
+      }
     </View>
   );
 }
@@ -87,6 +95,11 @@ const styles = StyleSheet.create({
   },
   camera: {
     flex: 1,
+  },
+  topButtonContainer: {
+    flexDirection: 'row',
+    backgroundColor: 'transparent',
+    margin: 64,
   },
   buttonContainer: {
     flex: 1,
