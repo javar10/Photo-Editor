@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
-import { FlatList, Image, Text, StyleSheet, Dimensions, useWindowDimensions } from "react-native";
+import { FlatList, Image, Text, StyleSheet, Dimensions, View, TouchableOpacity } from "react-native";
 import * as ScreenOrientation from 'expo-screen-orientation';
+import SelectedImage from "./SelectedImage";
 
 const PhotoGallery = ({ cameraRoll, setViewGallery }) => {
     const [numColumns, setNumColumns] = useState(4);
     const [imgSize, setImgSize] = useState(Dimensions.get('window').width / 4);
     const [orientation, setOrientation] = useState('portrait');
+    const [imgUri, setImgUri] = useState(null);
 
     useEffect(() => {
         const handleOrientationChange = async () => {
@@ -26,34 +28,40 @@ const PhotoGallery = ({ cameraRoll, setViewGallery }) => {
         return () => {
             ScreenOrientation.removeOrientationChangeListener(subscription);
         };
-    
+
     }, [numColumns]);
 
     const renderImageItem = ({ item }) => {
         return (
-            <Image
-                source={{ uri: item }}
-                style={{ width: imgSize, height: imgSize }}
-            />
+            <TouchableOpacity onPress={() => setImgUri(item)}>
+                <Image
+                    source={{ uri: item }}
+                    style={{ width: imgSize, height: imgSize }}
+                />
+            </TouchableOpacity>
         )
     }
 
     return (
-        <FlatList
-            data={cameraRoll}
-            renderItem={renderImageItem}
-            keyExtractor={(item, index) => index.toString()}
-            numColumns={numColumns}
-            key={`${numColumns}-${imgSize}`}
-            ListHeaderComponent={
-                <Text
-                    style={styles.x}
-                    onPress={() => setViewGallery(false)}>
-                    X
-                </Text>
-            }
-            extraData={imgSize}
-        />
+        <>
+            <FlatList
+                data={cameraRoll}
+                renderItem={renderImageItem}
+                keyExtractor={(item, index) => index.toString()}
+                numColumns={numColumns}
+                key={`${numColumns}-${imgSize}`}
+                ListHeaderComponent={
+                    <Text
+                        style={styles.x}
+                        onPress={() => setViewGallery(false)}>
+                        X
+                    </Text>
+                }
+                extraData={imgSize}
+            />
+            {imgUri && <SelectedImage imgUri={imgUri} setImgUri={setImgUri} />}
+        </>
+
     )
 }
 
