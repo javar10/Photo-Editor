@@ -3,7 +3,7 @@ import { FlatList, Image, Text, StyleSheet, Dimensions, View, TouchableOpacity }
 import * as ScreenOrientation from 'expo-screen-orientation';
 import SelectedImage from "./SelectedImage";
 
-const PhotoGallery = ({ cameraRoll, setViewGallery }) => {
+const PhotoGallery = ({ cameraRoll, setCameraRoll, setViewGallery }) => {
     const [numColumns, setNumColumns] = useState(4);
     const [imgSize, setImgSize] = useState(Dimensions.get('window').width / 4);
     const [orientation, setOrientation] = useState('portrait');
@@ -59,7 +59,12 @@ const PhotoGallery = ({ cameraRoll, setViewGallery }) => {
                 }
                 extraData={imgSize}
             />
-            {imgUri && <SelectedImage imgUri={imgUri} setImgUri={setImgUri} />}
+            {imgUri && <SelectedImage
+                imgUri={imgUri}
+                setImgUri={setImgUri}
+                cameraRoll={cameraRoll}
+                setCameraRoll={setCameraRoll}
+            />}
         </>
 
     )
