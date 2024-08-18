@@ -37,14 +37,14 @@ export default function App() {
     setFacing(current => (current === 'back' ? 'front' : 'back'));
   }
 
-  const retakePicture = () => {
-    setImage(null)
-  }
+  // const retakePicture = () => {
+  //   setImage(null)
+  // }
 
-  const savePicture = () => {
-    setCameraRoll([...cameraRoll, image]);
-    setImage(null);
-  }
+  // const savePicture = () => {
+  //   setCameraRoll([...cameraRoll, image]);
+  //   setImage(null);
+  // }
 
   return (
     <View style={styles.container}>
@@ -72,7 +72,8 @@ export default function App() {
             </View>
           </CameraView>)
           
-          : (<CameraPreview image={image} retakePicture={retakePicture} savePicture={savePicture} />)
+          // : (<CameraPreview image={image} retakePicture={retakePicture} savePicture={savePicture} />)
+          : (<CameraPreview image={image} setImage={setImage} setCameraRoll={setCameraRoll} cameraRoll={cameraRoll} />)
         )
       }
     </View>
