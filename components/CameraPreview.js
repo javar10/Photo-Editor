@@ -31,6 +31,7 @@ import EmojiSticker from './EmojiSticker';
             "unicode_version": "0.6",
           }
         */
+
     }
     return (
         <View style={styles.container}>

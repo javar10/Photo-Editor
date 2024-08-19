@@ -3,6 +3,7 @@ import { useState, useRef } from 'react';
 import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import CameraPreview from './components/CameraPreview';
 import PhotoGallery from './components/PhotoGallery';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 export default function App() {
   const [facing, setFacing] = useState<CameraType>('front');
@@ -47,7 +48,7 @@ export default function App() {
   // }
 
   return (
-    <View style={styles.container}>
+    <GestureHandlerRootView style={styles.container}>
       {viewGallery
         ? (<PhotoGallery
           cameraRoll={cameraRoll}
@@ -76,7 +77,7 @@ export default function App() {
           : (<CameraPreview image={image} setImage={setImage} setCameraRoll={setCameraRoll} cameraRoll={cameraRoll} />)
         )
       }
-    </View>
+    </GestureHandlerRootView>
   );
 }
 
