@@ -5,21 +5,21 @@ import { captureRef } from 'react-native-view-shot';
 import EmojiSticker from './EmojiSticker';
 
 // const CameraPreview = ({ image, retakePicture, savePicture }) => {
-    const CameraPreview = ({ image, setImage, cameraRoll, setCameraRoll }) => {
+const CameraPreview = ({ image, setImage, cameraRoll, setCameraRoll }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedEmoji, setSelectedEmoji] = useState(null);
-    const imageRef = useRef(); 
+    const imageRef = useRef();
 
+    console.log(cameraRoll);
+    const retakePicture = () => {
+        setImage(null)
+    }
 
-  const retakePicture = () => {
-    setImage(null)
-  }
-
-  const savePicture = async () => {
-    const imageToSave = await captureRef(imageRef)
-    setCameraRoll([...cameraRoll, imageToSave]);
-    setImage(null);
-  }
+    const savePicture = async () => {
+        const imageToSave = await captureRef(imageRef)
+        setCameraRoll([...cameraRoll, imageToSave]);
+        setImage(null);
+    }
 
     const handlePick = (emojiObject) => {
         console.log(emojiObject)

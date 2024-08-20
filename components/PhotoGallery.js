@@ -29,6 +29,7 @@ const PhotoGallery = ({ cameraRoll, setCameraRoll, setViewGallery }) => {
             ScreenOrientation.removeOrientationChangeListener(subscription);
         };
 
+        
     }, [numColumns]);
 
     const renderImageItem = ({ item }) => {
