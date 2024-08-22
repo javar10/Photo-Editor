@@ -1,13 +1,21 @@
 import { StyleSheet, Text, ImageBackground } from "react-native"
 
-const SelectedImage = ({ imgUri, setImgUri, cameraRoll, setCameraRoll }) => {
+const SelectedImage = ({ imgUri, setImgUri, cameraRoll, setCameraRoll, cameraRollArray, setCameraRollArray }) => {
   
-  const deleteImage = () => {
-    const index = cameraRoll.indexOf(imgUri);
-    const newCameraRoll = cameraRoll.splice(index, 1);
-    setCameraRoll(cameraRoll);
-    setImgUri(null)
-    console.log('deleted')
+  const deleteImage = async () => {
+    const index = cameraRollArray.indexOf(imgUri);
+    console.log('index: ', index);
+
+    if (index !== -1) {
+      const newCameraRoll = [
+        ...cameraRoll.slice(0, index),
+        ...cameraRoll.slice(index + 1)
+      ];
+      setCameraRoll(newCameraRoll);
+      setImgUri(null)
+
+      console.log('deleted')
+    }
   }
   
   return (

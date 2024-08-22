@@ -27,7 +27,36 @@ export default function App() {
       }
       fetchCameraRoll();
   }, [])
-  
+
+  const listAllKeys = async () => {
+    try {
+      const keys = await AsyncStorage.getAllKeys();
+      console.log('async storage keys: ', keys)
+    } catch (error) {
+      console.error('Error listing keys:', error);
+    }
+  };
+
+  // Call the function to list all keys
+  listAllKeys();
+
+  // const clearAsyncStorage = async () => {
+  //   try {
+  //     await AsyncStorage.clear();
+  //     console.log('AsyncStorage cleared!');
+  //   } catch (error) {
+  //     console.error('Error clearing AsyncStorage:', error);
+  //   }
+  // };
+
+  // // Call the function to clear AsyncStorage
+  // clearAsyncStorage();
+
+
+  // useEffect(() => {
+  //   console.log('cameraRoll from App.tsx: ', cameraRoll)
+  // }, [cameraRoll]);
+
   if (!permission) {
     return <View />;
   }

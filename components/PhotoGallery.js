@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { FlatList, Image, Text, StyleSheet, Dimensions, View, TouchableOpacity } from "react-native";
 import * as ScreenOrientation from 'expo-screen-orientation';
 import SelectedImage from "./SelectedImage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const PhotoGallery = ({ cameraRoll, setCameraRoll, setViewGallery }) => {
     const [numColumns, setNumColumns] = useState(4);
@@ -13,16 +14,17 @@ const PhotoGallery = ({ cameraRoll, setCameraRoll, setViewGallery }) => {
     useEffect(() => {
         const loadImage = async () => {
             try {
-                const uriCameraRoll = cameraRoll.map(photo => `data:image/png;base64,${photo}`)
-                setCameraRollArray(uriCameraRoll)
+                if (cameraRoll) {
+                    const uriCameraRoll = cameraRoll.map(photo => `data:image/png;base64,${photo}`)
+                    setCameraRollArray(uriCameraRoll)
+                }
             } catch (error) {
-                console.error('Error retrieving image', error);
+                console.error('Error retrieving image ', error);
             }
         };
-
+        console.log('cameraRoll length from photogallery: ', cameraRoll.length)
         loadImage();
-
-    }, [])
+    }, [cameraRoll])
 
     useEffect(() => {
         const handleOrientationChange = async () => {
@@ -78,6 +80,8 @@ const PhotoGallery = ({ cameraRoll, setCameraRoll, setViewGallery }) => {
                 setImgUri={setImgUri}
                 cameraRoll={cameraRoll}
                 setCameraRoll={setCameraRoll}
+                cameraRollArray={cameraRollArray}
+                setCameraRollArray={setCameraRollArray}
             />}
         </>
 
