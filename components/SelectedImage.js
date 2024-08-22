@@ -1,11 +1,13 @@
-import { View, Image, StyleSheet, Dimensions, Text, ImageBackground } from "react-native"
+import { StyleSheet, Text, ImageBackground } from "react-native"
 
 const SelectedImage = ({ imgUri, setImgUri, cameraRoll, setCameraRoll }) => {
+  
   const deleteImage = () => {
     const index = cameraRoll.indexOf(imgUri);
     const newCameraRoll = cameraRoll.splice(index, 1);
     setCameraRoll(cameraRoll);
     setImgUri(null)
+    console.log('deleted')
   }
   
   return (

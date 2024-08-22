@@ -1,38 +1,46 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, ImageBackground } from 'react-native';
 import EmojiPicker from 'rn-emoji-keyboard';
 import { captureRef } from 'react-native-view-shot';
 import EmojiSticker from './EmojiSticker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// const CameraPreview = ({ image, retakePicture, savePicture }) => {
 const CameraPreview = ({ image, setImage, cameraRoll, setCameraRoll }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedEmoji, setSelectedEmoji] = useState(null);
     const imageRef = useRef();
 
-    console.log(cameraRoll);
     const retakePicture = () => {
         setImage(null)
     }
 
     const savePicture = async () => {
-        const imageToSave = await captureRef(imageRef)
+        const imageToSave = await captureRef(imageRef, {
+            format: 'png',
+            quality: 1,
+            result: 'base64',
+        })
         setCameraRoll([...cameraRoll, imageToSave]);
         setImage(null);
     }
 
-    const handlePick = (emojiObject) => {
-        console.log(emojiObject)
-        setSelectedEmoji(emojiObject);
-        /* example emojiObject = {
-            "emoji": "❤️",
-            "name": "red heart",
-            "slug": "red_heart",
-            "unicode_version": "0.6",
-          }
-        */
+    useEffect(() => {
+        const updateCameraRoll = async () => {
+            const cameraRollString = JSON.stringify(cameraRoll)
+            try {
+                await AsyncStorage.setItem('cameraRoll', cameraRollString);
+            } catch (err) {
+                console.log(err)
+                Alert.alert('Image not saved. 😞')
+            }
+        }
+        updateCameraRoll();
+    }, [cameraRoll])
 
+    const handlePick = (emojiObject) => {
+        setSelectedEmoji(emojiObject);
     }
+    
     return (
         <View style={styles.container}>
             <ImageBackground

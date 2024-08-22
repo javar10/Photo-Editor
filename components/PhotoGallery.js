@@ -8,6 +8,21 @@ const PhotoGallery = ({ cameraRoll, setCameraRoll, setViewGallery }) => {
     const [imgSize, setImgSize] = useState(Dimensions.get('window').width / 4);
     const [orientation, setOrientation] = useState('portrait');
     const [imgUri, setImgUri] = useState(null);
+    const [cameraRollArray, setCameraRollArray] = useState([]);
+
+    useEffect(() => {
+        const loadImage = async () => {
+            try {
+                const uriCameraRoll = cameraRoll.map(photo => `data:image/png;base64,${photo}`)
+                setCameraRollArray(uriCameraRoll)
+            } catch (error) {
+                console.error('Error retrieving image', error);
+            }
+        };
+
+        loadImage();
+
+    }, [])
 
     useEffect(() => {
         const handleOrientationChange = async () => {
@@ -21,7 +36,6 @@ const PhotoGallery = ({ cameraRoll, setCameraRoll, setViewGallery }) => {
             }
             setImgSize(width / numColumns);
         };
-
         const subscription = ScreenOrientation.addOrientationChangeListener(handleOrientationChange);
         handleOrientationChange();
 
@@ -29,7 +43,6 @@ const PhotoGallery = ({ cameraRoll, setCameraRoll, setViewGallery }) => {
             ScreenOrientation.removeOrientationChangeListener(subscription);
         };
 
-        
     }, [numColumns]);
 
     const renderImageItem = ({ item }) => {
@@ -46,7 +59,7 @@ const PhotoGallery = ({ cameraRoll, setCameraRoll, setViewGallery }) => {
     return (
         <>
             <FlatList
-                data={cameraRoll}
+                data={cameraRollArray}
                 renderItem={renderImageItem}
                 keyExtractor={(item, index) => index.toString()}
                 numColumns={numColumns}
